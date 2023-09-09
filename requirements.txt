@@ -1,0 +1,6 @@
+fastapi
+sqlalchemy
+uvicorn
+
+>python -m virtualenv env
+pip install fastapi
