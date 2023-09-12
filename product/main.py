@@ -21,11 +21,21 @@ def get_db():
     finally: 
         db.close()
 
+@app.get('/products')
+def products(db: Session = Depends(get_db)):
+    products = db.query(models.Product).all()
+    return products
+
+@app.get('/product/{id}')
+def product(id, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.id == id).first()
+    return product
+
 @app.post('/product')
 def add(request: schemas.Product, db: Session = Depends(get_db) ): 
     new_product = models.Product(name = request.name, description = request.description, price = request.price)
     db.add(new_product)
     db.commit()
-    db.refres(new_product)
+    db.refresh(new_product)
     return request
 
