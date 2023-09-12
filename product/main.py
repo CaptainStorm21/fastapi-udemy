@@ -27,8 +27,14 @@ def delete(id, db: Session = Depends(get_db)):
     db.commit()
     return {'Entry Deleted'}
 
-
-
+@app.put('/product/{id}')
+def update(id, request: schemas.Product, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.id == id)
+    if not product.first():
+        pass 
+    product.update(request.dict())
+    db.commit()
+    return {'Product was updated'}
 
 @app.get('/products')
 def products(db: Session = Depends(get_db)):
