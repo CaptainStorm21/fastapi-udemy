@@ -1,4 +1,4 @@
-from  fastapi import FastAPI
+from  fastapi import FastAPI, Response, HTTPException
 #from .import schemas
 #from .import models
 #from .database import engine
@@ -44,8 +44,10 @@ def products(db: Session = Depends(get_db)):
     return products
 
 @app.get('/product/{id}', response_model=schemas.DisplayProduct)
-def product(id, db: Session = Depends(get_db)):
+def product(id, response: Response, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.id == id).first()
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = 'Product not found')
     return product
 
 @app.post('/product', status_code = status.HTTP_201_CREATED)

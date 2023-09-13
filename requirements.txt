@@ -4,4 +4,4 @@ uvicorn
 pydantic
 
 
-uvicorn 
+uvicorn main:app --reload
