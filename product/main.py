@@ -14,7 +14,15 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated="auto")
 
-app = FastAPI()
+app = FastAPI(
+    title="Products API",
+    description="this is db for user and product",
+    terms_of_service="http://www.google.com",
+    contact={
+        "Developer name": "AI",
+        "Developer email": "Hooligans@yahoo.com"
+    }
+)
 
 models.Base.metadata.create_all(engine)
 
@@ -25,13 +33,13 @@ def get_db():
     finally: 
         db.close()
 
-@app.delete('/product/{id}')
+@app.delete('/product/{id}', tags = ['products to be deleted'])
 def delete(id, db: Session = Depends(get_db)):
     db.query(models.Product).filter(models.Product.id == id).delete(synchronize_session=False)
     db.commit()
     return {'Entry Deleted'}
 
-@app.put('/product/{id}')
+@app.put('/product/{id}', tags = ['update products'])
 def update(id, request: schemas.Product, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.id == id)
     if not product.first():
@@ -41,7 +49,7 @@ def update(id, request: schemas.Product, db: Session = Depends(get_db)):
     return {'Product was updated'
 }
 
-@app.get('/products', response_model= List[schemas.DisplayProduct])
+@app.get('/products', response_model= List[schemas.DisplayProduct], tags=['get a list of all products'])
 def products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
