@@ -5,10 +5,19 @@ class Product(BaseModel):
     description: str
     price: int
     
+class DisplaySeller(BaseModel):
+    username:str 
+    email:str
+
+    class Config:
+        orm_mode = True
+    
 #to keep fields private
 class DisplayProduct(BaseModel):
     name: str
     description: str 
+    seller: DisplaySeller 
+
     class Config:
         orm_mode = True
 
@@ -17,10 +26,4 @@ class Seller(BaseModel):
     email:str
     password:str
 
-class DisplaySeller(BaseModel):
-    username:str 
-    email:str
-
-    class Config:
-        orm_mode = True
 
