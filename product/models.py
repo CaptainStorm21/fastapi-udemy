@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from database import Base
+from sqlalchemy.orm import relationship
 
 class Product(Base):
     __tablename__ = 'products'
@@ -7,6 +8,8 @@ class Product(Base):
     description= Column(String)
     price = Column(Integer)
     id = Column(Integer, primary_key = True, index = True)
+    seller_id = Column(Integer, ForeignKey('sellers.id'))
+    seller = relationship("Seller", back_populates = 'products')
 
 class Seller(Base):
     __tablename__ = 'sellers'
@@ -14,3 +17,4 @@ class Seller(Base):
     username = Column(String)
     email= Column(String)
     password = Column(String)
+    products = relationship('Product', back_populates='seller')
