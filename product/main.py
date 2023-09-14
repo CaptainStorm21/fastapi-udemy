@@ -10,6 +10,9 @@ from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from typing import List 
 from fastapi import status 
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes = ["bcrypt"], deprecated="auto")
 
 app = FastAPI()
 
@@ -60,7 +63,8 @@ def add(request: schemas.Product, db: Session = Depends(get_db) ):
 
 @app.post('/seller')
 def create_seller(request:schemas.Seller,  db: Session = Depends(get_db)):
-    new_seller = models.Seller(username = request.username, email = request.email, password = request.password)
+    hashedpassword = pwd_context.hash(request.password)
+    new_seller = models.Seller(username = request.username, email = request.email, password = hashedpassword)
     db.add(new_seller)
     db.commit()
     db.refresh(new_seller)

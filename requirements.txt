@@ -3,5 +3,8 @@ sqlalchemy
 uvicorn
 pydantic
 
+passlib
+bcrypt
 
-uvicorn main:app --reload
+
+#uvicorn main:app --reload
