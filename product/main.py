@@ -1,18 +1,16 @@
-
-from .database import engine
 from  fastapi import FastAPI, Response, HTTPException
 from sqlalchemy.sql.functions import mode
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_404_NOT_FOUND
-from .database import engine, SessionLocal
+from database import engine, SessionLocal, get_db
 from fastapi import status
 from passlib.context import CryptContext
-from .routers import product
-from .import schemas
-from .import models
+from routers import product
+import models
+import schemas
 
-pwd_context = CryptContext(schemes = ["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 app = FastAPI(
     title="Products API",
@@ -29,9 +27,9 @@ models.Base.metadata.create_all(engine)
 
 
 @app.post('/seller', response_model=schemas.DisplaySeller)
-def create_seller(request:schemas.Seller,  db: Session = Depends(get_db)):
+def create_seller(request:schemas.Seller, db: Session=Depends(get_db)):
     hashedpassword = pwd_context.hash(request.password)
-    new_seller = models.Seller(username = request.username, email = request.email, password = hashedpassword)
+    new_seller = models.Seller(username=request.username, email=request.email, password=hashedpassword)
     db.add(new_seller)
     db.commit()
     db.refresh(new_seller)
