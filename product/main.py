@@ -10,6 +10,7 @@ from routers import product
 import models
 import schemas
 
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 app = FastAPI(
@@ -21,7 +22,7 @@ app = FastAPI(
         "Developer email": "Hooligans@yahoo.com"
     }
 )
-
+app.include_router(product.router)
 app.include_router(product.router)
 models.Base.metadata.create_all(engine)
 
